@@ -1,1 +1,36 @@
 
+name: Update Sitemap
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *' # 毎日0時に実行（UTC）
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests feedparser pytz
+
+      - name: Run sitemap generator
+        run: python generate_sitemap.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add sitemap.xml
+          git commit -m "Update sitemap" || echo "No changes to commit"
+          git push
