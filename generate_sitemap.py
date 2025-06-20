@@ -3,7 +3,7 @@ from datetime import datetime
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 
 # 1. フィードURL（最大500件取得）
-feed_url = "https://flashsoudannavi.blogspot.com/feeds/posts/default?max-results=500"
+feed_url = "https://flashsoudannavi.blogspot.com/feeds/posts/default?max-results=100"
 
 # 2. フィードの読み込み
 feed = feedparser.parse(feed_url)
