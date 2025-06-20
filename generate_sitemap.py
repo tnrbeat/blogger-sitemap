@@ -1,35 +1,23 @@
-name: Update Blogger Sitemap
+import feedparser
+from datetime import datetime
+from xml.etree.ElementTree import Element, SubElement, ElementTree
 
-on:
-  workflow_dispatch:  # 手動実行
-  schedule:
-    - cron: '0 3 * * *'  # JSTで毎日12:00（UTC 03:00）に実行
+# BloggerのフィードURL（100件まで）
+feed_url = "https://flashsoudannavi.blogspot.com/feeds/posts/default?max-results=100"
+feed = feedparser.parse(feed_url)
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+urlset = Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
 
-    steps:
-    - name: リポジトリをチェックアウト
-      uses: actions/checkout@v3
+for entry in feed.entries:
+    url = SubElement(urlset, "url")
 
-    - name: Pythonをセットアップ
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+    loc = SubElement(url, "loc")
+    loc.text = entry.link
 
-    - name: 依存パッケージをインストール
-      run: pip install feedparser
+    lastmod = SubElement(url, "lastmod")
+    updated = getattr(entry, "updated_parsed", getattr(entry, "published_parsed", None))
+    if updated:
+        lastmod.text = datetime(*updated[:6]).strftime("%Y-%m-%d")
 
-    - name: Bloggerのフィードを読み込んでsitemap.xmlを作成
-      run: |
-        python generate_sitemap.py
-
-    - name: sitemap.xmlをコミット＆プッシュ
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git pull origin main --rebase
-        git add sitemap.xml
-        git commit -m "Update sitemap.xml [auto]" || echo "No changes to commit"
-        git push origin main
+tree = ElementTree(urlset)
+tree.write("sitemap.xml", encoding="utf-8", xml_declaration=True)
