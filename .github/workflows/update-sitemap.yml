@@ -16,10 +16,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'  # ← 修正済み！
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install feedparser
+        run: pip install requests feedparser  # ← ★ここに requests を追加！
 
       - name: Run sitemap generator
         run: python generate_sitemap.py
