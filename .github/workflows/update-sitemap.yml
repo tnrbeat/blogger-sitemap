@@ -2,7 +2,7 @@ name: Generate sitemap
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 毎日03:00 UTC = 日本時間12:00
+       - cron: '0 15 * * *'  # 毎日15:00 UTC = 日本時間24:00（翌日0時）
   workflow_dispatch:       # 手動実行も可
 
 jobs:
