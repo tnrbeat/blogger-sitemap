@@ -2,32 +2,32 @@ name: Generate sitemap
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 毎日午前3時（日本時間12時）に実行
-  workflow_dispatch:     # 手動実行も可能
+    - cron: '0 3 * * *'  # 毎日03:00 UTC = 日本時間12:00
+  workflow_dispatch:       # 手動実行も可
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: '3.11'  # ← 修正済み！
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install feedparser
 
       - name: Run sitemap generator
         run: python generate_sitemap.py
 
       - name: Commit and push if changed
         run: |
-          git config user.name 'github-actions'
-          git config user.email 'actions@github.com'
-          git add sitemap.xml
-          git diff --cached --quiet || git commit -m "Update sitemap"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml || true
+          git diff --cached --quiet sitemap.xml || git commit -m "Update sitemap.xml"
           git push
