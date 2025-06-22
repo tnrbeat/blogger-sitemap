@@ -2,8 +2,8 @@ name: Generate sitemap
 
 on:
   schedule:
-       - cron: '0 15 * * *'  # 毎日15:00 UTC = 日本時間24:00（翌日0時）
-  workflow_dispatch:       # 手動実行も可
+    - cron: '0 15 * * *'  # 毎日15:00 UTC = 日本時間24:00（翌日0時）
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests feedparser  # ← ★ここに requests を追加！
+        run: pip install requests feedparser
 
       - name: Run sitemap generator
         run: python generate_sitemap.py
