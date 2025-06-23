@@ -1,1 +1,4 @@
+User-agent: *
+Allow: /
 
+Sitemap: https://tnrbeat.github.io/blogger-sitemap/sitemap.xml
